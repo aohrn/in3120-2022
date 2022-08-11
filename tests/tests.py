@@ -1,0 +1,26 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from test_betterranker import TestBetterRanker
+from test_braindeadnormalizer import TestBrainDeadNormalizer
+from test_braindeadranker import TestBrainDeadRanker
+from test_braindeadtokenizer import TestBrainDeadTokenizer
+from test_compressedinmemorypostinglist import TestCompressedInMemoryPostingList
+from test_documentpipeline import TestDocumentPipeline
+from test_expressioncomposer import TestExpressionComposer
+from test_inmemorycorpus import TestInMemoryCorpus
+from test_inmemorydictionary import TestInMemoryDictionary
+from test_inmemorydocument import TestInMemoryDocument
+from test_inmemoryinvertedindexwithcompression import TestInMemoryInvertedIndexWithCompression
+from test_inmemoryinvertedindexwithoutcompression import TestInMemoryInvertedIndexWithoutCompression
+from test_inmemorypostinglist import TestInMemoryPostingList
+from test_naivebayesclassifier import TestNaiveBayesClassifier
+from test_postingsmerger import TestPostingsMerger
+from test_shallowcaseextractor import TestShallowCaseExtractor
+from test_shinglegenerator import TestShingleGenerator
+from test_sieve import TestSieve
+from test_simplesearchengine import TestSimpleSearchEngine
+from test_stringfinder import TestStringFinder
+from test_suffixarray import TestSuffixArray
+from test_trie import TestTrie
+from test_variablebytecodec import TestVariableByteCodec
