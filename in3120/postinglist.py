@@ -55,7 +55,7 @@ class InMemoryPostingList(PostingList):
     """
 
     def __init__(self):
-        self.__postings : List[Posting] = []
+        self.__postings: List[Posting] = []
 
     def get_length(self) -> int:
         return len(self.__postings)
@@ -74,7 +74,7 @@ class InMemoryPostingList(PostingList):
 class CompressedInMemoryPostingList(PostingList):
     """
     A simple in-memory implementation of a compressed posting list. Combines simple gap encoding
-    with variable-byte encoding. 
+    with variable-byte encoding.
     """
 
     class CompressedInMemoryPostingListIterator(Iterator[Posting]):

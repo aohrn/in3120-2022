@@ -20,8 +20,7 @@ class PostingsMerger:
         to the document identifiers.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")
 
     @staticmethod
     def union(p1: Iterator[Posting], p2: Iterator[Posting]) -> Iterator[Posting]:
@@ -33,5 +32,4 @@ class PostingsMerger:
         to the document identifiers.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")

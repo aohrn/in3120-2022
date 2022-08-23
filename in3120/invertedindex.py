@@ -60,7 +60,14 @@ class InMemoryInvertedIndex(InvertedIndex):
     compression is currently not supported.
     """
 
-    def __init__(self, corpus: Corpus, fields: Iterable[str], normalizer: Normalizer, tokenizer: Tokenizer, compressed: bool = False):
+    def __init__(
+        self,
+        corpus: Corpus,
+        fields: Iterable[str],
+        normalizer: Normalizer,
+        tokenizer: Tokenizer,
+        compressed: bool = False,
+    ):
         self.__corpus = corpus
         self.__normalizer = normalizer
         self.__tokenizer = tokenizer
@@ -78,14 +85,12 @@ class InMemoryInvertedIndex(InvertedIndex):
         collection. The dictionary implementation is assumed to produce term
         identifiers in the range {0, ..., N - 1}.
         """
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")
 
     def get_terms(self, buffer: str) -> Iterator[str]:
         # In a serious large-scale application there could be field-specific tokenizers.
         # We choose to keep it simple here.
-        tokens = self.__tokenizer.strings(
-            self.__normalizer.canonicalize(buffer))
+        tokens = self.__tokenizer.strings(self.__normalizer.canonicalize(buffer))
         return (self.__normalizer.normalize(t) for t in tokens)
 
     def get_postings_iterator(self, term: str) -> Iterator[Posting]:

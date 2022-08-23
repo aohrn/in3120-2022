@@ -27,7 +27,7 @@ class VariableByteCodec:
             number = number // 128
         values.reverse()
         values[-1] += 128
-        destination.extend(pack('%dB' % len(values), *values))
+        destination.extend(pack("%dB" % len(values), *values))
         return len(values)
 
     @staticmethod
@@ -46,7 +46,7 @@ class VariableByteCodec:
             byte = source[where]
             where += 1
             if byte < 128:
-                number = 128 * number +  byte
+                number = 128 * number + byte
             else:
                 number = 128 * number + (byte - 128)
                 return (number, where - start)

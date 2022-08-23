@@ -14,8 +14,9 @@ class NaiveBayesClassifier:
     Defines a multinomial naive Bayes text classifier.
     """
 
-    def __init__(self, training_set: Dict[str, Corpus], fields: Iterable[str],
-                 normalizer: Normalizer, tokenizer: Tokenizer):
+    def __init__(
+        self, training_set: Dict[str, Corpus], fields: Iterable[str], normalizer: Normalizer, tokenizer: Tokenizer
+    ):
         """
         Constructor. Trains the classifier from the named fields in the documents in
         the given training set.
@@ -48,24 +49,21 @@ class NaiveBayesClassifier:
         Estimates all prior probabilities needed for the naive Bayes classifier.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")
 
     def __compute_vocabulary(self, training_set, fields):
         """
         Builds up the overall vocabulary as seen in the training set.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")
 
     def __compute_posteriors(self, training_set, fields):
         """
         Estimates all conditional probabilities needed for the naive Bayes classifier.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")
 
     def __get_terms(self, buffer):
         """
@@ -73,8 +71,7 @@ class NaiveBayesClassifier:
         terms as they appear. Both the documents in the training set and the buffers
         we classify need to be identically processed.
         """
-        tokens = self.__tokenizer.strings(
-            self.__normalizer.canonicalize(buffer))
+        tokens = self.__tokenizer.strings(self.__normalizer.canonicalize(buffer))
         return (self.__normalizer.normalize(t) for t in tokens)
 
     def classify(self, buffer: str) -> Iterator[Dict[str, Any]]:
@@ -87,5 +84,4 @@ class NaiveBayesClassifier:
         "category" (str).
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")

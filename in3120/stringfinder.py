@@ -37,5 +37,4 @@ class StringFinder:
         or similar linguistic variations.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")

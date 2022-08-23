@@ -21,33 +21,26 @@ class ShallowCaseExtractor:
 
     def __init__(self):
         grammar1 = {
-
             # E.g., empty lines between paragraphs or between a heading and a paragraph.
             "sep0": "\\n\\s*\\n",
-
             # Flow-breaking punctuation without context considerations. The inverted question
             # and exclamation marks might result in empty chunks, but that's benign.
             "sep1": "[¿?!¡:]\\s*",
-
             # Flow-breaking punctuation with context considerations. So not "Dr. Smith", "3.14", etc.
             # Negative look-behinds in Python must be fixed-width, so we have to group them accordingly.
             "sep2a": "(?<!\\bDr|Mr|Ms)",
             "sep2b": "(?<!\\bMrs|Rev)",
             "sep2c": "(?<!\\bProf)",
             "sep2": "{sep2a}{sep2b}{sep2c}\\.\\s+",
-
             # For consistency, also match the last period so that this gets stripped away. Generates
             # a trailing empty chunk, but that's benign.
             "sep3": "\\.\\s*\\Z",
-
             # Our top-level goal: A simple sentence boundary detector, that also deals with some malformed input.
             # Splitting stuff into sentences and also removing the flow-breaking punctuation enables us to
             # simplify the extraction grammar's context checks.
             "root": "{sep0}|{sep1}|{sep2}|{sep3}",
-
         }
         grammar2 = {
-
             # Basic case definitions. Deal with various accented symbols. Python's regular expression engine
             # does not support \p{Lu} or \p{Ll}, so list symbols explicitly.
             # TODO: These symbol sets can be made more restrictive if we see that it picks up a lot of noise.
@@ -60,7 +53,6 @@ class ShallowCaseExtractor:
                 "expression": "a-zªµºßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĳĵķĸĺļľŀłńņňŉŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷźżž",
                 "decorate": False,
             },
-
             # A word that initiates or is part of a proper noun. Contains a mix of uppercased and
             # lowercased symbols. This covers "Apple" and "iPhone", but not "apple" or "APPLE".
             # A single space between words will suffice, assuming that we sanitize the input buffer before
@@ -69,18 +61,14 @@ class ShallowCaseExtractor:
             "cword0": "\\b[{ucase}]+[{lcase}][{ucase}{lcase}]*\\b",
             "cword1": "\\b[{lcase}]+[{ucase}][{ucase}{lcase}]*\\b",
             "cword": "{cword0}|{cword1}",
-
             # A lowercased "filler" word that is allowed to appear inside an interesting sequence, but not
             # start or end it. For example, as in "Lord of the Rings" or "Otto von Porat".
             "fword": "\\bof|the|and|von|der|de\\b",
-
             # An integer. Some proper nouns end with these, e.g., "Windows 95".
             "iword": "\\b\\d+\\b",
-
             # A honorific. As in, e.g., "Dr. Smith". See also the sentence boundary logic in the
             # chunker's grammar. We could merge the grammars if we wanted to share this logic.
             "hword": "\\bMr|Mrs|Ms|Dr|Prof|Rev\\b",
-
             # A proper noun-ish sequence to be extracted, not considering context. We allow some optional filler
             # words, and allow a trailing integer.
             "pseq0": "(?:{hword}\\.?\\s?)",
@@ -88,21 +76,17 @@ class ShallowCaseExtractor:
             "pseq2": "(?:(?:[\\s\\-]{fword}){{1,2}})(?:[\\s\\-]{cword})+",
             "pseq3": "(?:[\\s\\-]{iword})",
             "pseq": "{pseq0}?{pseq1}{pseq2}?{pseq3}?",
-
             # Define forbidden context: Does it look like we are starting a new sentence?
             # We assume that the chunker does sentence boundary detection and strips away flow-breaking
             # punctuation. This allows us to simplify the context check below. Note that look-behinds
             # have fixed-width requirements.
             "ctx0": "(?<!\\A)",
-            "ctx1": "(?<!\\A\")",
+            "ctx1": '(?<!\\A")',
             "ctx": "{ctx0}{ctx1}",
-
             # Our top-level goal: A syntactically interesting sequence that doesn't violate the context requirements.
             "root": "{ctx}{pseq}",
-
         }
         grammar3 = {
-
             # Days of the week are not considered interesting matches.
             "mon": "\\bMon(?:day)?\\b",
             "tue": "\\bTue(?:sday)?\\b",
@@ -112,7 +96,6 @@ class ShallowCaseExtractor:
             "sat": "\\bSat(?:urday)?\\b",
             "sun": "\\bSun(?:day)?\\b",
             "day": "{mon}|{tue}|{wed}|{thu}|{fri}|{sat}|{sun}",
-
             # Names of months are not considered interesting matches.
             "jan": "\\bJan(?:uary)?\\b",
             "feb": "\\bFeb(?:ruary)?\\b",
@@ -127,20 +110,16 @@ class ShallowCaseExtractor:
             "nov": "\\bNov(?:ember)?\\b",
             "dec": "\\bDec(?:ember)?\\b",
             "month": "{jan}|{feb}|{mar}|{apr}|{may}|{jun}|{jul}|{aug}|{sep}|{oct}|{nov}|{dec}",
-
             # Dates are not considered interesting matches.
             "date": "{month}\\s\\d\\d",
-
             # Our top-level goal: Stuff we want filtered out.
             # Don't decorate, to ensure that the flags are at the start of the expression.
-            "root": {
-                "decorate": False,
-                "expression": "(?i)^(?:{day}|{month}|{date})$"
-            }
-
+            "root": {"decorate": False, "expression": "(?i)^(?:{day}|{month}|{date})$"},
         }
         self._chunker = re.compile(ExpressionComposer.from_grammar(grammar1, "root"))  # Splits buffers into chunks.
-        self._matcher = re.compile(ExpressionComposer.from_grammar(grammar2, "root"))  # Extracts candidate matches from a chunk.
+        self._matcher = re.compile(
+            ExpressionComposer.from_grammar(grammar2, "root")
+        )  # Extracts candidate matches from a chunk.
         self._cleaner = re.compile(ExpressionComposer.from_grammar(grammar3, "root"))  # Filters away known bad matches.
 
     def _chunkify_buffer(self, buffer: str, options: Dict[str, Any]) -> List[str]:

@@ -33,8 +33,7 @@ class SuffixArray:
         The suffix array allows us to search across all named fields in one go.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")
 
     def __normalize(self, buffer: str) -> str:
         """
@@ -54,8 +53,7 @@ class SuffixArray:
         due to how we represent the suffixes via (index, offset) tuples.
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")
 
     def evaluate(self, query: str, options: dict) -> Iterator[Dict[str, Any]]:
         """
@@ -74,5 +72,4 @@ class SuffixArray:
         "document" (Document).
         """
 
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")

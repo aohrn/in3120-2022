@@ -13,8 +13,8 @@ class ExpressionComposerDecorator(MutableMapping):
 
     def __init__(self, grammar: Dict[str, Any]):
         self._grammar = grammar  # The grammar, defines the properties of individual keys in the mapping.
-        self._mapping = {}       # The backing store for the mapping itself.
-        self._counts = {}        # For each key in the mapping, keep track of many times it has been accessed.
+        self._mapping = {}  # The backing store for the mapping itself.
+        self._counts = {}  # For each key in the mapping, keep track of many times it has been accessed.
 
     def __iter__(self):
         """

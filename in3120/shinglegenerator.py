@@ -19,5 +19,4 @@ class ShingleGenerator(Tokenizer):
         """
         Locates where the shingles begin and end.
         """
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")

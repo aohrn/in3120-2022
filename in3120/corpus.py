@@ -152,6 +152,7 @@ class InMemoryCorpus(Corpus):
         Loads documents from the given UTF-8 encoded CSV file. One document per line.
         """
         import csv
+
         document_id = 0
         with open(filename, mode="r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
@@ -167,6 +168,7 @@ class InMemoryCorpus(Corpus):
         Lines that do not start with "{" are ignored.
         """
         from json import loads
+
         document_id = 0
         with open(filename, mode="r", encoding="utf-8") as f:
             for line in f:

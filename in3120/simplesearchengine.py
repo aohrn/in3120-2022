@@ -32,5 +32,4 @@ class SimpleSearchEngine:
         debug = options.get("debug", False)
 
         # Document-at-a-time!
-        raise NotImplementedError(
-            "You need to implement this as part of the assignment.")
+        raise NotImplementedError("You need to implement this as part of the assignment.")

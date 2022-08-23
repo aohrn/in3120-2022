@@ -23,13 +23,13 @@ class Tokenizer(ABC):
         """
         Returns the strings that make up the tokens in the given buffer.
         """
-        return (buffer[r[0]:r[1]] for r in self.ranges(buffer))
+        return (buffer[r[0] : r[1]] for r in self.ranges(buffer))
 
     def tokens(self, buffer: str) -> Iterator[Tuple[str, Tuple[int, int]]]:
         """
         Returns the (string, range) pairs that make up the tokens in the given buffer.
         """
-        return ((buffer[r[0]:r[1]], r) for r in self.ranges(buffer))
+        return ((buffer[r[0] : r[1]], r) for r in self.ranges(buffer))
 
 
 class BrainDeadTokenizer(Tokenizer):
