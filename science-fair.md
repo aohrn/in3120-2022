@@ -14,7 +14,7 @@ Each group should prepare a 10-15 minute long presentation on a selected topic. 
 
 Your chosen topic should be somehow relevant to the course. Examples include continuations of or deep-dives into topics covered by the course, or fun areas not covered by the course but related to search technology. Be creative! Example ideas to get you started include:
 
-* Pick one the papers distributed as part of the course. Present the ideas and results outlined in your chosen paper!
+* Pick one of the papers distributed as part of the course. Present the ideas and results outlined in your chosen paper!
 * Each obligatory assignment contains “some optional bonus challenges for the interested student”. Pick one or more of these and report back with your implementation and findings!
 * Parts of the textbook aren’t covered by any of this year’s lectures. Select a topic from one of the uncovered sections!
 * There are a large number of open-source systems and libraries available for search and large-scale document processing. Pick one, and explain what it does and how it works!
