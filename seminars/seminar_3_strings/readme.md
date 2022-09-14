@@ -1,2 +1,3 @@
-The content from seminar 3 will be published here after the fact.
-We also cover some things we missed in week 2.
+We had some technical issues with the projector so the menti did not go well, but I upload it here for later reference.
+
+Apologies for forgetting to add bullets on the `suffix array` entry!
