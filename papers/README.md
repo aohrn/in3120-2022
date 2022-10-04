@@ -30,6 +30,10 @@ Some of the papers below are key to the course assignments or are covered by lec
 
   Through appropriate preprocessing we can represent documents and queries as dense numerical vectors, e.g., using the embedding vector techniques described in some of the other papers listed here. Searching for the most relevant documents then becomes a problem of being able to very efficiently identify which document vectors that are the closest to the query vector according to some suitable distance metric. This paper describes an index structure specialized for this purpose.
 
+* (☕) J.-T. Huang, L. Xia, J. Padmanabhan, A. Sharma, D. Zhang, G. Ottaviano, S. Sun, P. Pronin, L. Yang, ["Embedding-based Retrieval in Facebook Search"](embedding-based-retrieval-in-facebook-search.pdf).
+
+  If your documents and queries are represented as embedding vectors, you can use an approximate nearest neighbor (ANN) index for retrieval and ranking. Furthermore, this process typically needs to be efficiently combined with constraints on keywords or how documents relate to each other. This paper describes such a search system in use at Facebook/Meta.
+
 * (☕) Y. Tay, V. Q. Tran, M. Dehghani, J. Ni, D. Bahri, H. Mehta, Z. Qin, K. Hui, Z. Zhao, J. Gupta, T. Schuster, W. W. Cohen, D. Metzler, ["Transformer Memory as a Differentiable Search Index"](transformer-memory-as-a-differentiable-search-index.pdf).
 
   Large-scale deep learning models have proven to be remarkably successful across many different tasks. If we think of search as a mapping problem where we want to map a string query to a list of document identifiers, why not try to represent the index itself as a deep learning model where the "index" is then encoded into the model's parameters? Indexing then becomes a special case of model training, incrementally updating an index becomes a special case of model updating, and searching boils down to using standard model inference instead of a special-purpose fixed search procedure.
