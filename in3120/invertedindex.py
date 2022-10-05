@@ -60,32 +60,48 @@ class InMemoryInvertedIndex(InvertedIndex):
     compression is currently not supported.
     """
 
-    def __init__(
-        self,
-        corpus: Corpus,
-        fields: Iterable[str],
-        normalizer: Normalizer,
-        tokenizer: Tokenizer,
-        compressed: bool = False,
-    ):
+    def __init__(self, corpus: Corpus, fields: Iterable[str], normalizer: Normalizer, tokenizer: Tokenizer, compressed: bool = False):
         self.__corpus = corpus
         self.__normalizer = normalizer
         self.__tokenizer = tokenizer
-        self.__posting_lists: List[PostingList] = []
+        self.__posting_lists : List[PostingList] = []
         self.__dictionary = InMemoryDictionary()
-        # Constructs __posting_lists and __dictionary.
         self.__build_index(fields, compressed)
 
     def __repr__(self):
         return str({term: self.__posting_lists[term_id] for (term, term_id) in self.__dictionary})
 
     def __build_index(self, fields: Iterable[str], compressed: bool) -> None:
-        """
-        Builds a simple inverted index from the named fields in the document
-        collection. The dictionary implementation is assumed to produce term
-        identifiers in the range {0, ..., N - 1}.
-        """
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        for document in self.__corpus:
+
+            # Compute TF values for all unique terms in the document. Note that we
+            # currently don't keep track of which field each term occurs in.
+            # If we were to allow fielded searches (e.g., "find documents that
+            # contain 'foo' in the 'title' field") then we would have to keep
+            # track of that, either as a synthetic term in the dictionary
+            # (e.g., 'title.foo') or as extra data in the posting.
+            all_terms = itertools.chain.from_iterable(self.get_terms(document.get_field(f, "")) for f in fields)
+            term_frequencies = Counter(all_terms)
+
+            for (term, term_frequency) in term_frequencies.items():
+
+                # Assign the term an identifier, if needed. First come, first serve.
+                term_id = self.__dictionary.add_if_absent(term)
+
+                # Locate the posting list for this term. Create it, if needed.
+                if term_id >= len(self.__posting_lists):
+                    assert term_id == len(self.__posting_lists)
+                    self.__posting_lists.append(CompressedInMemoryPostingList() if compressed else InMemoryPostingList())
+                posting_list = self.__posting_lists[term_id]
+
+                # Append the posting to the posting list. The posting lists
+                # must be kept sorted so that we can efficiently traverse and
+                # merge them when querying the inverted index.
+                posting_list.append_posting(Posting(document.document_id, term_frequency))
+
+        # Implementations may or may not need to tie up any loose ends.
+        for posting_list in self.__posting_lists:
+            posting_list.finalize_postings()
 
     def get_terms(self, buffer: str) -> Iterator[str]:
         # In a serious large-scale application there could be field-specific tokenizers.
