@@ -22,7 +22,7 @@ Your task is to:
 Some optional bonus challenges for the interested student:
 
 - Using the `BrainDeadNormalizer` and `BrainDeadTokenizer` classes is kind of backwards and is a simplification when doing language identification. Because normalization and especially tokenization is generally language-specific (e.g., a tokenizer for Japanese is very different from a tokenizer for English) and we are trying to infer the language of the text, our implementation would fall short if we had added, e.g., Japanese as a possible output category. Modify your implementation to use the language-agnostic `ShingleGenerator` class instead, and extend your training set with more languages. Does this make a difference?
-- Find some other training data, e.g., try learning how to classify text into different topics such as {_sports_, _politics_, _finance_, ...} or sentiment classes such as {_positive_, _neutral_, _negative_}. For inspiration see, e.g., [here](https://lionbridge.ai/datasets/the-best-25-datasets-for-natural-language-processing/) or search the web.
+- Find some other training data, e.g., try learning how to classify text into different topics such as {_sports_, _politics_, _finance_, ...} or sentiment classes such as {_positive_, _neutral_, _negative_}. For inspiration see, e.g., [here](https://metatext.io/datasets-list/text-classification-task) or [here](https://datasetsearch.research.google.com/) or search the web.
 - Select some other text classification algorithms and implement these. For inspiration see, e.g., [here](https://scikit-learn.org/stable/supervised_learning.html) or search the web.
 
 Example output:
