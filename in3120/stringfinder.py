@@ -3,7 +3,7 @@
 
 from .tokenizer import Tokenizer
 from .trie import Trie
-from typing import Iterator, Dict, Any
+from typing import Iterator, Dict, Any, List, Tuple
 
 
 class StringFinder:
@@ -36,5 +36,35 @@ class StringFinder:
         support for leftmost-longest matching (instead of reporting all matches), and support for lemmatization
         or similar linguistic variations.
         """
+        # The set of currently explored states. We represent a state as a node in the trie (that
+        # represents where in the trie we are after having consumed zero or more characters) plus
+        # an index (that represents the position into the original buffer where the state was "born".)
+        # The trie node is what we advance along the way, while the index is needed so that we know where
+        # we first started if/when a match is found.
+        live_states : List[Tuple[Trie, int]] = []
 
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        # Where did the previous token end? Assume that tokens are produced sorted in left-to-right
+        # order.
+        previous_end = -1
+
+        # Only consider matches that start on token boundaries.
+        for (string, (begin, end)) in self.__tokenizer.tokens(buffer):
+
+            # Inject a space for the currently live states? Some languages, e.g., Japanese
+            # or Chinese, don't use whitespace between tokens.
+            is_juxtaposed, previous_end = (previous_end > 0) and (begin == previous_end), end
+            if not is_juxtaposed:
+                live_states = [(s.consume(" "), b) for (s, b) in live_states]
+
+            # Consider this token a potential start for a match. Advance all
+            # currently live states. Then prune, since consuming more characters has
+            # probably killed off some states.
+            live_states.append((self.__trie, begin))
+            live_states = [(s.consume(string), b) for (s, b) in live_states if s]
+            live_states = [(s, b) for (s, b) in live_states if s]
+
+            # Report matches, if any, that end on the token we just consumed. Use the
+            # tokenizer to somewhat normalize the matches we emit.
+            for match_begin in (b for (s, b) in live_states if s.is_final()):
+                yield {"match": " ".join(self.__tokenizer.strings(buffer[match_begin:end])),
+                       "range": (match_begin, end)}
