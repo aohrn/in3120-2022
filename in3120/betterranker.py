@@ -5,6 +5,7 @@ from .ranker import Ranker
 from .corpus import Corpus
 from .posting import Posting
 from .invertedindex import InvertedIndex
+import math
 
 
 class BetterRanker(Ranker):
@@ -26,15 +27,23 @@ class BetterRanker(Ranker):
         self._inverted_index = inverted_index
         self._dynamic_score_weight = 1.0  # TODO: Make this configurable.
         self._static_score_weight = 1.0  # TODO: Make this configurable.
-        # TODO: Make this configurable.
-        self._static_score_field_name = "static_quality_score"
+        self._static_score_field_name = "static_quality_score"  # TODO: Make this configurable.
 
     def reset(self, document_id: int) -> None:
         self._score = 0.0
         self._document_id = document_id
 
     def update(self, term: str, multiplicity: int, posting: Posting) -> None:
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        assert term is not None
+        assert multiplicity > 0
+        assert posting is not None
+        assert posting.term_frequency > 0
+        assert posting.document_id == self._document_id
+        tf_score = 1.0 + math.log10(posting.term_frequency)
+        idf_score = math.log10(self._corpus.size() / float(self._inverted_index.get_document_frequency(term)))
+        self._score += (1.0 + math.log10(multiplicity)) * tf_score * idf_score
 
     def evaluate(self) -> float:
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        document = self._corpus[self._document_id]
+        static_quality_score = float(document[self._static_score_field_name] or 0.0)
+        return (self._dynamic_score_weight * self._score) + (self._static_score_weight * static_quality_score)
