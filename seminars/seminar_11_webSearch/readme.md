@@ -1,0 +1,1 @@
+Vi gjennomgår oblig D, snakker om hvordan interenett fungerer mtp søk og søkemotorer, samt repeterer hvordan websøk henger sammen. Ellers vil det bli satt av tid til oblighjelp for oblig E. Siste ordinære gruppetime!
