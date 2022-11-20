@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import math
+import operator
 from collections import Counter
 from .dictionary import InMemoryDictionary
 from .normalizer import Normalizer
@@ -14,9 +16,8 @@ class NaiveBayesClassifier:
     Defines a multinomial naive Bayes text classifier.
     """
 
-    def __init__(
-        self, training_set: Dict[str, Corpus], fields: Iterable[str], normalizer: Normalizer, tokenizer: Tokenizer
-    ):
+    def __init__(self, training_set: Dict[str, Corpus], fields: Iterable[str],
+                 normalizer: Normalizer, tokenizer: Tokenizer):
         """
         Constructor. Trains the classifier from the named fields in the documents in
         the given training set.
@@ -49,21 +50,34 @@ class NaiveBayesClassifier:
         Estimates all prior probabilities needed for the naive Bayes classifier.
         """
 
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        # Maximum likelihood estimate.
+        total_count = sum([training_set[category].size() for category in training_set])
+        self.__priors = {category: training_set[category].size() / total_count for category in training_set}
 
     def __compute_vocabulary(self, training_set, fields):
         """
         Builds up the overall vocabulary as seen in the training set.
         """
-
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        # We're doing simple add-one (Laplace) smoothing when estimating the probabilities, so
+        # figure out the size of the overall vocabulary.
+        for (_, corpus) in training_set.items():
+            for document in corpus:
+                for field in fields:
+                    for term in self.__get_terms(document.get_field(field, "")):
+                        self.__vocabulary.add_if_absent(term)
 
     def __compute_posteriors(self, training_set, fields):
         """
         Estimates all conditional probabilities needed for the naive Bayes classifier.
         """
-
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        # Use smoothed estimates. Remember the denominators we used, so that we later know how
+        # to handle out-of-vocabulary words.
+        for (category, corpus) in training_set.items():
+            terms = self.__get_terms(" ".join([d.get_field(f, "") for d in corpus for f in fields]))
+            term_frequencies = Counter(terms)
+            self.__denominators[category] = sum(term_frequencies.values()) + self.__vocabulary.size()
+            self.__conditionals[category] = {t: (term_frequencies[t] + 1) / self.__denominators[category]
+                                             for t in term_frequencies}
 
     def __get_terms(self, buffer):
         """
@@ -83,5 +97,19 @@ class NaiveBayesClassifier:
         The results yielded back to the client are dictionaries having the keys "score" (float) and
         "category" (str).
         """
+        # Only consider terms that occurred in the training set.
+        terms = [term for term in self.__get_terms(buffer) if term in self.__vocabulary]
 
-        raise NotImplementedError("You need to implement this as part of the assignment.")
+        # Seed with priors.
+        scores = {category: math.log(self.__priors[category]) for category in self.__priors}
+
+        # Accumulate log-probabilities for each term. For terms not observed for the current category,
+        # use a smoothed estimate.
+        for category in scores:
+            default = 1.0 / self.__denominators[category]
+            for term in terms:
+                scores[category] += math.log(self.__conditionals[category].get(term, default))
+
+        # Emit categories back to the client in sorted order.
+        for (category, score) in reversed(sorted(scores.items(), key=operator.itemgetter(1))):
+            yield {"score": score, "category": category}
